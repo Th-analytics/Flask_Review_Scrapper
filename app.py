@@ -15,6 +15,7 @@ from flask_cors import cross_origin
 
 from reviewScrapper import Scrap
 app = Flask(__name__)
+free_status = True
 class threadClass:
 
     def __init__(self,):
