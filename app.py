@@ -18,6 +18,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def homepage():
+    obj = Scrap()
     if request.method == 'POST':
         searched_product_name = request.form['content'].replace(' ', '')
         number_of_product = int(request.form['expected_review'])
@@ -34,11 +35,12 @@ def homepage():
 @app.route('/feedback', methods=['GET'])
 @cross_origin()
 def feedback():
+    obj = Scrap()
     reviews = [i for i in obj.data_main]
     #print(reviews)
     return render_template('results.html', rows= [reviews,obj.product ])
     #return render_template('results.html', reviews= db_data)
 
 if __name__ == '__main__':
-    obj = Scrap()
+
     app.run(port=8000, debug=True)
