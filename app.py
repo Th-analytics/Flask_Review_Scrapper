@@ -7,9 +7,9 @@ from flask import Flask,render_template, request, redirect, url_for
 import requests
 from bs4 import BeautifulSoup as BS
 from urllib.request import urlopen as uReq
-import json
+
 import pymongo
-import os
+
 
 from flask_cors import cross_origin
 
