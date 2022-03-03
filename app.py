@@ -14,7 +14,7 @@ from reviewScrapper import Scrap
 app = Flask(__name__)
 free_status = True
 rows ={}
-
+number_of_product = int()
 class threadClass:
     def __init__(self,object):
         self.object = object
@@ -65,7 +65,7 @@ def feedback():
     value = 'False'
     if obj.returnLen() == number_of_product+1:
         value = 'True'
-    #print(obj.returnLen(),obj.nop,number_of_product)
+    print(obj.returnLen(),obj.nop,number_of_product)
     return render_template('results.html', rows= [reviews,obj.product,value])
     #return render_template('results.html', reviews= db_data)
 
