@@ -14,8 +14,8 @@ from reviewScrapper import Scrap
 app = Flask(__name__)
 free_status = True
 rows ={}
-class threadClass:
 
+class threadClass:
     def __init__(self,object):
         self.object = object
         thread = threading.Thread(target=self.run, args=())
@@ -57,6 +57,7 @@ def homepage():
 @app.route('/feedback', methods=['GET'])
 @cross_origin()
 def feedback():
+    global number_of_product
     obj = Scrap()
     #while True:
     reviews = [i for i in obj.data_main]
@@ -69,4 +70,5 @@ def feedback():
     #return render_template('results.html', reviews= db_data)
 
 if __name__ == '__main__':
+
     app.run(port=8000, debug=True)
