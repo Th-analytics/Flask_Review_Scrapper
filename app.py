@@ -4,22 +4,20 @@
 
 # import pandas as pd
 from flask import Flask,render_template, request, redirect, url_for
-import requests
-from bs4 import BeautifulSoup as BS
-from urllib.request import urlopen as uReq
 import threading
-import pymongo
 
 
+import random
 from flask_cors import cross_origin
 
 from reviewScrapper import Scrap
 app = Flask(__name__)
 free_status = True
+rows ={}
 class threadClass:
 
-    def __init__(self,):
-
+    def __init__(self,object):
+        self.object = object
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True  # Daemonize thread
         thread.start()  # Start the execution
@@ -27,9 +25,13 @@ class threadClass:
     def run(self):
         global free_status
         free_status = False
+        threading.Thread(target=self.object.scraperMain).start()
         free_status = True
+
 @app.route('/', methods=['POST', 'GET'])
 def homepage():
+
+    print(random.random())
     obj = Scrap()
     if request.method == 'POST':
         global free_status
@@ -42,7 +44,9 @@ def homepage():
         number_of_product = int(request.form['expected_review'])
         obj.product = searched_product_name
         obj.nop = number_of_product
-        obj.scraperMain()
+        #threading.Thread(target=obj.scraperMain).start()
+        threadClass(obj)
+        #obj.scraperMain()
         return redirect(url_for('feedback'))
 
     else:
@@ -54,11 +58,11 @@ def homepage():
 @cross_origin()
 def feedback():
     obj = Scrap()
+    #while True:
     reviews = [i for i in obj.data_main]
     #print(reviews)
     return render_template('results.html', rows= [reviews,obj.product ])
     #return render_template('results.html', reviews= db_data)
 
 if __name__ == '__main__':
-
     app.run(port=8000, debug=True)

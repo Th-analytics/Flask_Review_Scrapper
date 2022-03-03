@@ -1,8 +1,12 @@
+import json
+import os
 import pandas as pd
 from urllib.request import urlopen as ureq
 from bs4 import BeautifulSoup as bs
 import getpass
 import pymongo
+from flask import render_template
+
 
 class Scrap:
     temp = ''
@@ -118,6 +122,11 @@ class Scrap:
         self.df.to_csv('static/scrapper_data.csv')
 
 
+    def display(self):
+        print("In display")
+        reviews = [i for i in self.data_main]
+        return render_template('results.html', rows= [reviews, self.product ])
+
     def extractProductURL2(self, no_of_product2):
         '''
         Function called when box class id is _4ddWXP
@@ -223,8 +232,8 @@ class Scrap:
         iteration = (self.nop - p_on_page) / p_on_page
         re = self.nop % p_on_page
         # print("In get Value",iteration,re)
+        req_count = int(iteration)
         if type(iteration) == float:
-            req_count = int(iteration)
             for i in range(0, req_count):
                 iter_list.append(p_on_page)
             iter_list.append(re)
@@ -411,7 +420,6 @@ class Scrap:
             self.table.insert_one(
                 {'Product Name': pName, 'Product Price': pPrice, 'Product Rating': pRating, 'Reviews': reviews})
 
-
     def initiateReviewScrapper(self):
         product_on_page_0 = int(self.bs_data.find('span', {'class': '_10Ermr'}).text.strip().split()[3]) - int(
             self.bs_data.find('span', {'class': '_10Ermr'}).text.strip().split()[1]) + 1
@@ -425,6 +433,10 @@ class Scrap:
         self.getReviews()
 
     def scraperMain(self):
+        """if os.path.exists("static/scrapper_data.csv"):
+            os.remove("static/scrapper_data.csv")
+        else:
+            pass"""
         #self.takeInput()
         self.bs_data = self.search(self.product)
         # db_admin = input('Enter Database User Name')
@@ -442,3 +454,5 @@ class Scrap:
                     self.data_main.append(data_items)
         self.saveDownload(self.data_main)
         self.p_url_list.clear()
+        self.product = ''
+        self.nop = int()
