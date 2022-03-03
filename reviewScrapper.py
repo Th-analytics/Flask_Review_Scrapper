@@ -452,7 +452,9 @@ class Scrap:
             else:
                 for data_items in data:
                     self.data_main.append(data_items)
-        self.saveDownload(self.data_main)
+        copy_data_main = self.data_main.copy()
+        self.saveDownload(copy_data_main)
         self.p_url_list.clear()
+        self.data_main.clear()
         self.product = ''
         self.nop = int()
