@@ -9,6 +9,7 @@ from flask import render_template
 
 
 class Scrap:
+    download = bool
     temp = ''
     bs_data = ''
     url = 'https://www.flipkart.com'
@@ -120,7 +121,7 @@ class Scrap:
     def saveDownload(self,data_r):
         self.df = pd.DataFrame(data_r)
         self.df.to_csv('static/scrapper_data.csv')
-
+        self.download = True
 
     def display(self):
         print("In display")
@@ -419,6 +420,8 @@ class Scrap:
                 {'Product Name': pName, 'Product Price': pPrice, 'Product Rating': pRating, 'Reviews': reviews})
             self.table.insert_one(
                 {'Product Name': pName, 'Product Price': pPrice, 'Product Rating': pRating, 'Reviews': reviews})
+    def returnLen(self):
+        return len(self.data_main)
 
     def initiateReviewScrapper(self):
         product_on_page_0 = int(self.bs_data.find('span', {'class': '_10Ermr'}).text.strip().split()[3]) - int(
@@ -433,6 +436,9 @@ class Scrap:
         self.getReviews()
 
     def scraperMain(self):
+        #self.download = False
+        if None in self.data_main:
+            self.data_main.clear()
         """if os.path.exists("static/scrapper_data.csv"):
             os.remove("static/scrapper_data.csv")
         else:
@@ -454,7 +460,8 @@ class Scrap:
                     self.data_main.append(data_items)
         copy_data_main = self.data_main.copy()
         self.saveDownload(copy_data_main)
+        print("reviewScrapper:",self.download)
         self.p_url_list.clear()
-        self.data_main.clear()
+        self.data_main.append(None)
         self.product = ''
         self.nop = int()

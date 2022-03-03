@@ -30,7 +30,7 @@ class threadClass:
 
 @app.route('/', methods=['POST', 'GET'])
 def homepage():
-
+    global number_of_product
     print(random.random())
     obj = Scrap()
     if request.method == 'POST':
@@ -61,7 +61,11 @@ def feedback():
     #while True:
     reviews = [i for i in obj.data_main]
     #print(reviews)
-    return render_template('results.html', rows= [reviews,obj.product ])
+    value = 'False'
+    if obj.returnLen() == number_of_product+1:
+        value = 'True'
+    #print(obj.returnLen(),obj.nop,number_of_product)
+    return render_template('results.html', rows= [reviews,obj.product,value])
     #return render_template('results.html', reviews= db_data)
 
 if __name__ == '__main__':
